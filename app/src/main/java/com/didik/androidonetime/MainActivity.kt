@@ -43,8 +43,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadMahasiswa() {
         progressDialog.show()
-        AndroidNetworking.post("")
-            .addHeaders("","")
+        AndroidNetworking.post("http://belipulsabeta.purja.web.id/public/api/mahasiswa")
+            .addHeaders("Authorization","BearerpG6ff0zt6LNTGnh1")
             .setPriority(Priority.IMMEDIATE)
             .build()
             .getAsJSONObject(object  : JSONObjectRequestListener{
