@@ -42,6 +42,43 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadMahasiswa() {
+        progressDialog.show()
+        AndroidNetworking.post("")
+            .addHeaders("","")
+            .setPriority(Priority.IMMEDIATE)
+            .build()
+            .getAsJSONObject(object  : JSONObjectRequestListener{
+                override fun onResponse(response: JSONObject?) {
+                   progressDialog.dismiss()
+                    val respon = response.toString()
+                    Log.d("Mahasiswa", respon)
+                    val json = JSONObject(respon)
+                    val apiStatus = json.getInt("api_status")
+                    val apiMessage = json.getString("api_message")
+                    if (apiStatus.equals(1)) {
+                        val data = Gson().fromJson(respon, mahasiswaModel::class.java).data
+
+                        binding.rvDataMahasiswa.apply {
+                            adapter = AdapterMahasiswa(this@MainActivity, data)
+                            layoutManager = LinearLayoutManager(this@MainActivity)
+                            setHasFixedSize(true)
+                        }
+
+
+                    } else {
+                        Toast.makeText(this@MainActivity, apiMessage, Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onError(anError: ANError?) {
+                    progressDialog.dismiss()
+                    if (anError != null) {
+                        Toast.makeText(this@MainActivity, anError.errorBody, Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+            })
+
 
 
     }
